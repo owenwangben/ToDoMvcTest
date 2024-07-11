@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { Todo, Todotype } from './toDoList';
-// import { StorageService } from './storage.service';
+import { StorageService } from './services/storage.service';
 
 @Component({
   selector: 'app-root',
@@ -9,30 +9,28 @@ import { Todo, Todotype } from './toDoList';
 })
 export class AppComponent {
   title = 'ToDoMVC-test';
+   //項目列表
+ toDoList : Todo[] = [];
 
-  // constructor(private storageService : StorageService){ }
 
-  // saveData(): void {
-  //   const data = { name: 'John Doe', age: 30 };
-  //   this.storageService.setItem('userData', data);
-  // }
+  constructor( private storageService : StorageService ){ 
+    this.toDoList = this.storageService.getItem('toDoList') || [];
+   };
 
-  // loadData(): void {
-  //   const userData = this.storageService.getItem('userData');
-  //   console.log(userData);
-  // }
+  //  saveData():void{
+  //   this.storageService.setItem('myData',this.newTodoAll);
+  //  };
 
-  // clearData(): void {
-  //   this.storageService.clear();
-  // }
+  //  clearData():void{
+  //   this.storageService.removeItem('myData');
+  //  };
+
+
 
   //enum
   nowTodoType = Todotype.All;
   todoTypes = Todotype;
 
-
-  //項目列表
-  toDoList : Todo[] = [];
 
   //全選按鈕
   toggleBtn = false;
@@ -46,6 +44,7 @@ export class AppComponent {
       Thing: input.value,
       Editing: false
     });
+    this.storageService.setItem('toDoList',this.toDoList);
   };
     input.value = '';
   };
@@ -81,16 +80,19 @@ export class AppComponent {
   //項目勾選
   clickCheck(item:Todo){
     item.Status = !item.Status;
+    this.storageService.setItem('toDoList',this.toDoList);
   };
 
   //項目刪除
   delete(index:number){
     this.toDoList.splice(index,1);
+    this.storageService.setItem('toDoList', this.toDoList);
   };
 
   //雙擊編輯
   edit(item:Todo){
     item.Editing = true;
+    this.storageService.setItem('toDoList', this.toDoList);
   }
 
   //編輯更新
@@ -138,6 +140,7 @@ export class AppComponent {
   //清除已完成項目
   clearCompleted(){
     this.toDoList = this.todoActive;
+    this.storageService.setItem('toDoList', this.toDoList);
   };
 
 }
