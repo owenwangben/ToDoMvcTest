@@ -77,9 +77,14 @@ export class AppComponent {
   }
 
 
-  //項目勾選
+  //項目勾選，項目全部勾選時toggleBtn為深色
   clickCheck(item:Todo){
     item.Status = !item.Status;
+    if(this.todoCompleted.length === this.toDoList.length){
+      this.toggleBtn = true;
+    }else{
+      this.toggleBtn = false;
+    }
     this.storageService.setItem('toDoList',this.toDoList);
   };
 
@@ -97,9 +102,26 @@ export class AppComponent {
 
   //編輯更新
   update(item:Todo,value:string){
-    item.Thing = value;
-    item.Editing = false;
-  }
+    if(value.trim() !== ''){
+      item.Thing = value.trim();
+      item.Editing = false;
+    }else{
+      this.delete(this.toDoList.indexOf(item));
+    }
+  };
+
+  // add(input : HTMLInputElement){
+  //   const inputValue = input.value.trim();
+  //   if(inputValue !== ''){
+  //   this.toDoList.push({
+  //     Status: false,
+  //     Thing: input.value,
+  //     Editing: false
+  //   });
+  //   this.storageService.setItem('toDoList',this.toDoList);
+  // };
+  //   input.value = '';
+  // };
 
   //參數type預設為數字
   setTodoType(type:number){
@@ -143,4 +165,8 @@ export class AppComponent {
     this.storageService.setItem('toDoList', this.toDoList);
   };
 
+  //單複數轉換
+  get activeText(){
+    return this.todoActive.length === 1 ? ' item left' : ' items left';
+  }
 }
