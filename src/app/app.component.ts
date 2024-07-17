@@ -1,21 +1,29 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Todo, Todotype } from './toDoList';
 import { StorageService } from './services/storage.service';
+import { HttpClient } from '@angular/common/http';
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css']
 })
-export class AppComponent {
+export class AppComponent implements OnInit{
   title = 'ToDoMVC-test';
    //項目列表
  toDoList : Todo[] = [];
 
+ 
 
-  constructor( private storageService : StorageService ){ 
+  constructor( private storageService : StorageService , private http : HttpClient ){ 
     this.toDoList = this.storageService.getItem('toDoList') || [];
    };
+
+   ngOnInit():void{
+      this.http.get<Todo[]>('/api/todo2_16').subscribe(data =>{
+        this.toDoList = data;
+      });
+   }
 
   //  saveData():void{
   //   this.storageService.setItem('myData',this.newTodoAll);
@@ -88,11 +96,17 @@ export class AppComponent {
     this.storageService.setItem('toDoList',this.toDoList);
   };
 
-  //項目刪除
-  delete(index:number){
-    this.toDoList.splice(index,1);
-    this.storageService.setItem('toDoList', this.toDoList);
-  };
+
+//項目刪除
+delete(todo:Todo){
+  this.toDoList = this.toDoList.filter( data => data !== todo);
+  this.storageService.setItem('toDoList', this.toDoList);
+};
+  // //項目刪除
+  // delete(index:number){
+  //   this.toDoList.splice(index,1);
+  //   this.storageService.setItem('toDoList', this.toDoList);
+  // };
 
   //雙擊編輯
   edit(item:Todo){
@@ -106,7 +120,7 @@ export class AppComponent {
       item.Thing = value.trim();
       item.Editing = false;
     }else{
-      this.delete(this.toDoList.indexOf(item));
+      this.delete(item);
     }
   };
 

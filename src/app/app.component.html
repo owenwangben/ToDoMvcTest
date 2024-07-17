@@ -16,11 +16,12 @@
         <div class="view">
           <input class="toggle" type="checkbox" [checked]="item.Status" (click)="clickCheck(item)">
           <label (dblclick)="edit(item)">{{item.Thing}}</label>
-          <button class="destroy" (click)="delete(i)"></button>
+          <button class="destroy" (click)="delete(item)"></button>
         </div>
 
         <!-- 編輯更新項目 -->
-        <input class="edit" #updateInput [value]="item.Thing" 
+        <input class="edit" #updateInput 
+        [value]="item.Thing" 
         (keyup.enter)="update(item,updateInput.value)"
         (keyup.escape)="update(item,updateInput.value)"
         (blur)="update(item,updateInput.value)"

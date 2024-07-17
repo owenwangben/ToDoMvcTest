@@ -69,6 +69,10 @@
         },
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
+          "options":{
+            "browserTarget":"ToDoMVC-test:build",
+            "proxyConfig":"src/proxy.conf.json"
+          },
           "configurations": {
             "production": {
               "browserTarget": "ToDoMVC-test:build:production"
